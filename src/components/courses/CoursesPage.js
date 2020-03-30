@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import * as courseAction from '../../redux/actions/courseAction';
 
 class CoursePage extends Component {
@@ -10,7 +11,6 @@ class CoursePage extends Component {
     }
   };
   //this.handleOnChange = this.handleOnChange.bind(this);
-
   handleOnChange = event => {
     event.preventDefault();
     const course = { ...this.state.course, title: event.target.value };
@@ -18,8 +18,12 @@ class CoursePage extends Component {
   };
   handleSubmit = event => {
     event.preventDefault();
-    this.props.dispatch(courseAction.createCourse(this.state.course));
-    alert(this.state.course.title);
+
+    //this.props.dispatch(courseAction.createCourse(this.state.course));
+    //this.props.createCourse(this.state.course);
+    this.props.actions.createCourse(this.state.course);
+    //alert(this.state.course.title);
+    console.log(this.state.course);
   };
   render() {
     return (
@@ -34,18 +38,32 @@ class CoursePage extends Component {
           />
           <input type='submit' value='Save' />
         </form>
+
+        {this.props.courses.map(course => (
+          <div key={course.title}>{course.title}</div>
+        ))}
       </div>
     );
   }
 }
 
-CoursePage.PropTypes = {
-  dispatch: PropTypes.func.isRequired
+CoursePage.propTypes = {
+  courses: PropTypes.array.isRequired,
+  //createCourse: PropTypes.func.isRequired
+  actions: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
   return {
-    course: state.course
+    courses: state.courses
   };
 }
-export default connect(mapStateToProps)(CoursePage);
+
+function mapDispatchToProps(dispatch) {
+  return {
+    //createCourse: course => dispatch(courseAction.createCourse(course))
+    //createCourse: bindActionCreators(courseAction, dispatch)
+    actions: bindActionCreators(courseAction, dispatch)
+  };
+}
+export default connect(mapStateToProps, mapDispatchToProps)(CoursePage);
