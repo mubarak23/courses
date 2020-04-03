@@ -8,13 +8,18 @@ import * as authorAction from '../../redux/actions/authorAction';
 
 class Courses extends Component {
   componentDidMount() {
-    this.props.actions.loadCourses().catch(error => {
-      alert(`Loading course fail ${error}`);
-    });
+    const { courses, authors, actions } = this.props;
+    if (courses.length === 0) {
+      actions.loadCourses().catch(error => {
+        alert(`Loading course fail ${error}`);
+      });
+    }
 
-    this.props.actions.loadAuthors().catch(error => {
-      alert(`Loading course fail ${error}`);
-    });
+    if (authors.length === 0) {
+      actions.loadAuthors().catch(error => {
+        alert(`Loading course fail ${error}`);
+      });
+    }
   }
   render() {
     return (
@@ -31,6 +36,7 @@ class Courses extends Component {
 
 Courses.propTypes = {
   courses: PropTypes.array.isRequired,
+  authors: PropTypes.array.isRequired,
   //createCourse: PropTypes.func.isRequired
   actions: PropTypes.object.isRequired
 };
