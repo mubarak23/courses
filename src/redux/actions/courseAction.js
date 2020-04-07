@@ -10,13 +10,30 @@ export function loadCourseSuccess(courses) {
 }
 
 export function loadCourses() {
-  return function(dispatch) {
+  return function (dispatch) {
     return courseAPI
       .getCourses()
-      .then(courses => {
+      .then((courses) => {
         dispatch(loadCourseSuccess(courses));
       })
-      .catch(error => {
+      .catch((error) => {
+        throw error;
+      });
+  };
+}
+
+export function loadPostsSuccess(courses) {
+  return { type: types.LOAD_COURSES_SUCCESS, courses };
+}
+
+export function loadPosts() {
+  return function (dispatch) {
+    return courseAPI
+      .getPosts()
+      .then((courses) => {
+        dispatch(loadPostsSuccess(courses));
+      })
+      .catch((error) => {
         throw error;
       });
   };
