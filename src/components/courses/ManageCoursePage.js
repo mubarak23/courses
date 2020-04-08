@@ -3,14 +3,15 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import CourseForm from './CourseForm';
 import { newCourse } from '../../../tools/mockData';
-import * as courseAction from '../../redux/actions/courseAction';
-import * as authorAction from '../../redux/actions/authorAction';
+import { loadCourses, saveCourse } from '../../redux/actions/courseAction';
+import { loadAuthors } from '../../redux/actions/authorAction';
 
 function ManageCoursePage({
   courses,
   authors,
   loadCourses,
   loadAuthors,
+  saveCourse,
   ...props
 }) {
   const [course, setCourse] = useState({ ...props.course });
@@ -37,12 +38,19 @@ function ManageCoursePage({
     }));
   }
 
+  function handleSave(event) {
+    event.preventDefault();
+    console.log(course);
+    saveCourse(course);
+  }
+
   return (
     <CourseForm
       course={course}
       errors={errors}
       authors={authors}
       onChange={handleChange}
+      onSave={handleSave}
     />
   );
 }
@@ -55,6 +63,7 @@ ManageCoursePage.propTypes = {
   actions: PropTypes.object.isRequired,
   loadCourses: PropTypes.func.isRequired,
   loadAuthors: PropTypes.func.isRequired,
+  saveCourse: PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -66,9 +75,11 @@ function mapStateToProps(state) {
 }
 
 //object way of calling mapdispatchtoProps
+// note loadCourses : loadCourses
 const mapDispatchToProps = {
-  loadCourses: courseAction.loadCourses,
-  loadAuthors: authorAction.loadAuthors,
+  loadCourses,
+  loadAuthors,
+  saveCourse,
 };
 
 //createCourse: course => dispatch(courseAction.createCourse(course))
