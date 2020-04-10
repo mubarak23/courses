@@ -22,6 +22,8 @@ function ManageCoursePage({
       loadCourses().catch((error) => {
         alert(`Loading course fail ${error}`);
       });
+    } else {
+      setCourse({ ...props.course });
     }
 
     if (authors.length === 0) {
@@ -29,7 +31,7 @@ function ManageCoursePage({
         alert(`Loading course fail ${error}`);
       });
     }
-  }, []);
+  }, [props.course]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -41,7 +43,7 @@ function ManageCoursePage({
 
   function handleSave(event) {
     event.preventDefault();
-    console.log(course);
+    //console.log(course);
     saveCourse(course).then(() => {
       history.push('/courses');
     });
@@ -63,16 +65,29 @@ ManageCoursePage.propTypes = {
   authors: PropTypes.array.isRequired,
   //createCourse: PropTypes.func.isRequired
   course: PropTypes.object.isRequired,
-  actions: PropTypes.object.isRequired,
+  //actions: PropTypes.object.isRequired,
   loadCourses: PropTypes.func.isRequired,
   loadAuthors: PropTypes.func.isRequired,
   saveCourse: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
 };
 
-function mapStateToProps(state) {
+export function getCourseBySlug(courses, slug) {
+  //debugger;
+  console.log(courses);
+  return courses.find((course) => course.slug === slug) || null;
+}
+
+function mapStateToProps(state, ownProps) {
+  const slug = ownProps.match.params.slug;
+  console.log(slug);
+  //debugger;
+  const course =
+    slug && state.courses.length > 0
+      ? getCourseBySlug(state.courses, slug)
+      : newCourse;
   return {
-    course: newCourse,
+    course,
     courses: state.courses,
     authors: state.authors,
   };
