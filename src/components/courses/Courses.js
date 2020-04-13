@@ -27,11 +27,13 @@ class Courses extends Component {
       });
     }
   }
-  handkeDeleteCourse = (course) => {
+  handkeDeleteCourse = async (course) => {
     toast.success('Course Deleted');
-    this.props.actions.deleteCourse(course).catch((error) => {
+    try {
+      await this.props.actions.deleteCourse(course);
+    } catch (error) {
       toast.success('Delete Failed ' + error.message, { autoClose: false });
-    });
+    }
   };
   render() {
     return (
