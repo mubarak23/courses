@@ -58,7 +58,7 @@ function ManageCoursePage({
     event.preventDefault();
     //console.log(course);
     setSaving(true);
-    if (!formIsValid()) return;
+    //if (!formIsValid()) return;
     saveCourse(course)
       .then(() => {
         toast.success('Course Save');

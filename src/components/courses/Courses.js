@@ -29,7 +29,9 @@ class Courses extends Component {
   }
   handkeDeleteCourse = (course) => {
     toast.success('Course Deleted');
-    this.props.actions.deleteCourse(course);
+    this.props.actions.deleteCourse(course).catch((error) => {
+      toast.success('Delete Failed ' + error.message, { autoClose: false });
+    });
   };
   render() {
     return (
@@ -47,7 +49,10 @@ class Courses extends Component {
             >
               Add Course
             </button>
-            <CourseList courses={this.props.courses} />
+            <CourseList
+              onDeleteClick={this.handkeDeleteCourse}
+              courses={this.props.courses}
+            />
             {this.props.courses.map((course) => (
               <div key={course.title}>{course.title}</div>
             ))}
