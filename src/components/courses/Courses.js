@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import CourseList from './CourseList';
@@ -6,6 +6,8 @@ import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router-dom';
 import * as courseAction from '../../redux/actions/courseAction';
 import * as authorAction from '../../redux/actions/authorAction';
+import Spinner from '../common/Spinner';
+import { toast } from 'react-toastify';
 
 class Courses extends Component {
   state = {
@@ -25,22 +27,39 @@ class Courses extends Component {
       });
     }
   }
+  handkeDeleteCourse = async (course) => {
+    toast.success('Course Deleted');
+    try {
+      await this.props.actions.deleteCourse(course);
+    } catch (error) {
+      toast.success('Delete Failed ' + error.message, { autoClose: false });
+    }
+  };
   render() {
     return (
       <div>
         {this.state.redirectToAddCoursePage && <Redirect to='/course' />}
         <h2>Courses</h2>
-        <button
-          style={{ marginBottom: 20 }}
-          className='btn btn-primary add-course'
-          onClick={() => this.setState({ redirectToAddCoursePage: true })}
-        >
-          Add Course
-        </button>
-        <CourseList courses={this.props.courses} />
-        {this.props.courses.map((course) => (
-          <div key={course.title}>{course.title}</div>
-        ))}
+        {this.props.loading ? (
+          <Spinner />
+        ) : (
+          <Fragment>
+            <button
+              style={{ marginBottom: 20 }}
+              className='btn btn-primary add-course'
+              onClick={() => this.setState({ redirectToAddCoursePage: true })}
+            >
+              Add Course
+            </button>
+            <CourseList
+              onDeleteClick={this.handkeDeleteCourse}
+              courses={this.props.courses}
+            />
+            {this.props.courses.map((course) => (
+              <div key={course.title}>{course.title}</div>
+            ))}
+          </Fragment>
+        )}
       </div>
     );
   }
@@ -51,6 +70,7 @@ Courses.propTypes = {
   authors: PropTypes.array.isRequired,
   //createCourse: PropTypes.func.isRequired
   actions: PropTypes.object.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -66,6 +86,7 @@ function mapStateToProps(state) {
             };
           }),
     authors: state.authors,
+    loading: state.apiCallsInProgress > 0,
   };
 }
 
@@ -77,6 +98,7 @@ function mapDispatchToProps(dispatch) {
     actions: {
       loadCourses: bindActionCreators(courseAction.loadCourses, dispatch),
       loadAuthors: bindActionCreators(authorAction.loadAuthors, dispatch),
+      deleteCourse: bindActionCreators(courseAction.deleteCourse, dispatch),
     },
   };
 }
