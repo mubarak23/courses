@@ -7,6 +7,8 @@ import PageNotFound from './PageNotFount';
 //import CoursePage from './courses/CoursesPage';
 import Courses from './courses/Courses';
 import ManageCoursePage from './courses/ManageCoursePage';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function App() {
   return (
     <div className='container-fluid'>
@@ -20,6 +22,7 @@ function App() {
 
         <Route component={PageNotFound} />
       </Switch>
+      <ToastContainer autoClose={3000} hideProgressBar />
     </div>
   );
 }
