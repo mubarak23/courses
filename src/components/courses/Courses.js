@@ -7,6 +7,7 @@ import { Redirect } from 'react-router-dom';
 import * as courseAction from '../../redux/actions/courseAction';
 import * as authorAction from '../../redux/actions/authorAction';
 import Spinner from '../common/Spinner';
+import { toast } from 'react-toastify';
 
 class Courses extends Component {
   state = {
@@ -26,6 +27,10 @@ class Courses extends Component {
       });
     }
   }
+  handkeDeleteCourse = (course) => {
+    toast.success('Course Deleted');
+    this.props.actions.deleteCourse(course);
+  };
   render() {
     return (
       <div>
@@ -86,6 +91,7 @@ function mapDispatchToProps(dispatch) {
     actions: {
       loadCourses: bindActionCreators(courseAction.loadCourses, dispatch),
       loadAuthors: bindActionCreators(authorAction.loadAuthors, dispatch),
+      deleteCourse: bindActionCreators(courseAction.deleteCourse, dispatch),
     },
   };
 }
