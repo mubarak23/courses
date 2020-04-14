@@ -8,7 +8,7 @@ import { loadAuthors } from '../../redux/actions/authorAction';
 import { toast } from 'react-toastify';
 import Spinner from '../common/Spinner';
 
-function ManageCoursePage({
+export function ManageCoursePage({
   courses,
   authors,
   loadCourses,
